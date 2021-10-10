@@ -6,4 +6,4 @@ def index(request):
   data = {
     'title' : title,
   }
-  return render(request, "index.html", data)
+  return render(request, "apps/index.html", data)
