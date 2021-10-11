@@ -1,11 +1,8 @@
 from django.contrib import admin
 from django.urls import path, include
-
-from apps import views
+from . import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('apps/', views.index),
-    path('', views.index),
-    path('bubble/', include('bubble.urls')),
+  path('admin/', admin.site.urls),
+  path('', views.index),
 ]
