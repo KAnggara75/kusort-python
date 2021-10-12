@@ -1,0 +1,287 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>{{title}} | KuSorting</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="{% static 'sorting/css/sidebars.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'sorting/css/style.css' %}">
+  <!-- Bootstrap icons CDN Link -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="logo-details">
+      <i class="bi bi-sort-down-alt icon"></i>
+      <div class="logo_name">KuSorting</div>
+      <i class="bi bi-list" id="btn"></i>
+    </div>
+
+    <ul class="nav-list">
+      <li>
+        <i class='bi bi-search'></i>
+        <input type="text" placeholder="Search...">
+        <span class="tooltip">Search</span>
+      </li>
+
+      <li>
+        <a href="/">
+          <i class="bi bi-layout-wtf"></i>
+          <span class="links_name">Create New Array</span>
+        </a>
+        <span class="tooltip">Create New Array</span>
+      </li>
+      <li>
+        <a href="#" onclick="merge_sort()">
+          <i class="bi bi-arrows-collapse"></i>
+          <span class="links_name">Marge Sort</span>
+        </a>
+        <span class="tooltip">Marge Sort</span>
+      </li>
+      <li>
+        <a href="#" onclick="quick_sort()">
+          <i class="bi bi-cloud-upload"></i>
+          <span class="links_name">Quick Sort</span>
+        </a>
+        <span class="tooltip">Quick Sort</span>
+      </li>
+      <li>
+        <a href="#" onclick="bubble_sort()">
+          <i class="bi bi-cloud-upload"></i>
+          <span class="links_name">Bubble Sort</span>
+        </a>
+        <span class="tooltip">Bubble Sort</span>
+      </li>
+      <li>
+        <a href="#" onclick="selection_sort()">
+          <i class="bi bi-bookmarks"></i>
+          <span class="links_name">Selection Sort</span>
+        </a>
+        <span class="tooltip">Selection Sort</span>
+      </li>
+      <li>
+        <a href="#" onclick="insertion_sort()">
+          <i class="bi bi-skip-forward-fill"></i>
+          <span class="links_name">Insertion Sort</span>
+        </a>
+        <span class="tooltip">Insertion Sort</span>
+      </li>
+      <li class="profile">
+        <div class="profile-details">
+          <img src="https://github.com/kanggara.png" alt="profileImg">
+          <div class="name_job">
+            <div class="name">Call Vin</div>
+            <div class="job">Software Developer</div>
+          </div>
+        </div>
+        <i class="bi bi-terminal-fill" id="log_out"></i>
+      </li>
+    </ul>
+  </div>
+
+  <section class="home-section">
+    <!--Array-->
+    <div class="array-container">
+    <br>
+      {% for i in arr %}
+      <div class="array-bars" style="width:{{ i }}px; background-color: #1778b0;">
+      <label id="lblName">{{i}}</label>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  <script src="{% static 'sorting/js/sidebar.js' %}"></script>
+</body>
+<script>
+const ANIMATION_SPEED_MS = 15;
+const PRIMARY_COLOR = 'red';
+const SECONDARY_COLOR = 'e76f51';
+const ANIMATION_SPEED_MS_BUBBLE = 1;
+
+function merge_sort(){
+    $.ajax({
+    type: "POST",
+    url: '{{ 'mergesort/' }}',
+    data: { csrfmiddlewaretoken: '{{ csrf_token }}'},
+    success: function callback(animations){
+                var arr = JSON.parse(animations);
+
+                for (let i = 0; i < arr.length; i++) {
+                    const arrayBars = document.getElementsByClassName('array-bars');
+                    const isColorChange = i % 3 !== 2;
+                    if (isColorChange) {
+                        const [barOneIdx, barTwoIdx] = arr[i];
+                        const barOneStyle = arrayBars[barOneIdx].style;
+                        const barTwoStyle = arrayBars[barTwoIdx].style;
+                        const color = i % 3 === 0 ? SECONDARY_COLOR : PRIMARY_COLOR;
+                        setTimeout(() => {
+                            barOneStyle.backgroundColor = color;
+                            barTwoStyle.backgroundColor = color;
+                        }, i * ANIMATION_SPEED_MS);
+                    } else {
+                    setTimeout(() => {
+                        const [barOneIdx, newWidth] = arr[i];
+                        const barOneStyle = arrayBars[barOneIdx].style;
+                        barOneStyle.width = `${newWidth}px`;
+                        }, i * ANIMATION_SPEED_MS);
+                    }
+                    }
+                    $('#lblName').text(`${newWidth}`);
+                }
+    });
+}
+
+
+function quick_sort() {
+    $.ajax({
+    type: "POST",
+    url: '{{ 'quicksort/' }}',
+    data: { csrfmiddlewaretoken: '{{ csrf_token }}'},
+    success: function callback(animations){
+        var arr = JSON.parse(animations);
+
+        for (let i = 0; i < arr.length - 1; i++) {
+            const isColorChange = (i % 6 === 0) || (i % 6 === 1);
+            const arrayBars = document.getElementsByClassName('array-bars');
+            if(isColorChange === true) {
+                const color = (i % 6 === 0) ? SECONDARY_COLOR : PRIMARY_COLOR;
+                const [barOneIndex, barTwoIndex] = arr[i];
+                if(barOneIndex === -1) {
+                    continue;
+                }
+                const barOneStyle = arrayBars[barOneIndex].style;
+                const barTwoStyle = arrayBars[barTwoIndex].style;
+                setTimeout(() => {
+                    barOneStyle.backgroundColor = color;
+                    barTwoStyle.backgroundColor = color;
+                },i * ANIMATION_SPEED_MS);
+            }
+            else {
+                const [barIndex, newWidth] = arr[i];
+                if (barIndex === -1) {
+                    continue;
+            }
+            const barStyle = arrayBars[barIndex].style;
+            setTimeout(() => {
+                barStyle.width = `${newWidth}px`;
+            },i * ANIMATION_SPEED_MS);
+            }
+            }
+        }
+    });
+}
+
+
+function bubble_sort() {
+    $.ajax({
+    type: "POST",
+    url: '{{ 'bubblesort/' }}',
+    data: { csrfmiddlewaretoken: '{{ csrf_token }}'},
+    success: function callback(animations){
+        var arr = JSON.parse(animations);
+
+        for (let i = 0; i < arr.length; i++) {
+            const isColorChange = (i % 4 === 0) || (i % 4 === 1);
+            const arrayBars = document.getElementsByClassName('array-bars');
+                if(isColorChange === true) {
+                    const color = (i % 4 === 0) ? SECONDARY_COLOR : PRIMARY_COLOR;
+                    const [barOneIndex, barTwoIndex] = arr[i];
+                    const barOneStyle = arrayBars[barOneIndex].style;
+                    const barTwoStyle = arrayBars[barTwoIndex].style;
+                    setTimeout(() => {
+                        barOneStyle.backgroundColor = color;
+                        barTwoStyle.backgroundColor = color;
+                    },i * ANIMATION_SPEED_MS_BUBBLE);
+                }
+                else {
+                    const [barIndex, newWidth] = arr[i];
+                    if (barIndex === -1) {
+                        continue;
+                    }
+                    const barStyle = arrayBars[barIndex].style;
+                    setTimeout(() => {
+                        barStyle.width = `${newWidth}px`;
+                    },i * ANIMATION_SPEED_MS_BUBBLE);
+                }
+        }
+    }
+    });
+}
+
+
+function selection_sort() {
+    $.ajax({
+    type: "POST",
+    url: '{{ 'selectionsort/' }}',
+    data: { csrfmiddlewaretoken: '{{ csrf_token }}'},
+    success: function callback(animations){
+        var arr = JSON.parse(animations);
+
+        for (let i = 0; i < animations.length; i++) {
+            const isColorChange = (arr[i][0] === 999) || (arr[i][0] === 9999);
+            const arrayBars = document.getElementsByClassName('array-bars');
+            if(isColorChange === true) {
+                const color = (arr[i][0] === 999) ? SECONDARY_COLOR : PRIMARY_COLOR;
+                const [temp, barOneIndex, barTwoIndex] = arr[i];
+                const barOneStyle = arrayBars[barOneIndex].style;
+                const barTwoStyle = arrayBars[barTwoIndex].style;
+                setTimeout(() => {
+                    barOneStyle.backgroundColor = color;
+                    barTwoStyle.backgroundColor = color;
+                },i * ANIMATION_SPEED_MS);
+            }
+            else {
+                const [temp, barIndex, newWidth] = arr[i];
+                const barStyle = arrayBars[barIndex].style;
+            setTimeout(() => {
+                barStyle.width = `${newWidth}px`;
+            },i * ANIMATION_SPEED_MS);
+            }
+        }
+    }
+
+    });
+}
+
+
+function insertion_sort() {
+    $.ajax({
+    type: "POST",
+    url: '{{ 'insertionsort/' }}',
+    data: { csrfmiddlewaretoken: '{{ csrf_token }}'},
+    success: function callback(animations){
+        var arr = JSON.parse(animations);
+
+        for (let i = 0; i < arr.length; i++) {
+            const isColorChange = (arr[i][0] === 999) || (arr[i][0] === 9999);
+            const arrayBars = document.getElementsByClassName('array-bars');
+            if(isColorChange === true) {
+                const color = (arr[i][0] === 999) ? SECONDARY_COLOR : PRIMARY_COLOR;
+                const [temp, barOneIndex, barTwoIndex] = arr[i];
+                const barOneStyle = arrayBars[barOneIndex].style;
+                const barTwoStyle = arrayBars[barTwoIndex].style;
+                setTimeout(() => {
+                    barOneStyle.backgroundColor = color;
+                    barTwoStyle.backgroundColor = color;
+                },i * ANIMATION_SPEED_MS);
+            }
+            else {
+                const [temp, barIndex, newWidth] = arr[i];
+                const barStyle = arrayBars[barIndex].style;
+                setTimeout(() => {
+                    barStyle.width = `${newWidth}px`;
+                },i * ANIMATION_SPEED_MS);
+            }
+        }
+    }
+    });
+}
+</script>
+
+</html>

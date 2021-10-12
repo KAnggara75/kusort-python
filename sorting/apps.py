@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class AppsConfig(AppConfig):
+class SortingConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'apps'
+    name = 'sorting'
