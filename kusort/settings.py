@@ -113,15 +113,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = '/'
-STATIC_ROOT= '/home/sopfurni/pyapps/kusort/public'
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
-
-#STATIC_ROOT = (os.path.join(SITE_ROOT, 'staticfiles'))
-#SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
-#STATICFILES_DIRS = (os.path.join(SITE_ROOT, 'static/'),)
+STATIC_URL = '/static/'
+SITE_ROOT = os.path.dirname(os.path.realpath('./__file__'))
+STATIC_ROOT = (os.path.join(SITE_ROOT, 'staticfiles'))
+STATICFILES_DIRS = (os.path.join(SITE_ROOT, 'static/'),)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
